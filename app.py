@@ -4,7 +4,7 @@ from zhipuai import ZhipuAI
 client = ZhipuAI(api_key="0e11fc3a1a2d4288827f7f8bafee75c4.vO0zGOmcZ3P8iEzU")
 
 st.title("🤖 朋友圈文案生成器")
-st.write("输入一件事，AI帮你生成朋友圈文案")
+st.write("输入一件事，谢鹏辉大王帮你生成朋友圈文案")
 
 user_input = st.text_input("发生了什么？", placeholder="比如：今天去了西湖")
 
