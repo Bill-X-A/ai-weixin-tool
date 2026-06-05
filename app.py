@@ -39,6 +39,6 @@ if st.button("生成文案"):
             )
             result = response.choices[0].message.content
             st.write(result)
-            st.code(result)
+            st.text_area("复制文案", result, height=200)
     else:
         st.warning("请先输入内容")
