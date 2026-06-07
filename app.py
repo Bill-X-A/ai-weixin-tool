@@ -24,8 +24,7 @@ if st.button("生成文案"):
             response = client.chat.completions.create(
                 model="glm-4-flash",
                 messages=[
-                    {"role": "system", "content": "你是一个专门写中文朋友圈文案的助手。你的文案风格真实自然，绝对不用岁月、治愈、满满的等词。你只回答跟朋友圈文案相关的问题，其他问题一律拒绝回答。
-"},
+                    {"role": "system", "content": "你是一个专门写中文朋友圈文案的助手。你的文案风格真实自然，绝对不用岁月、治愈、满满的等词。你只回答跟朋友圈文案相关的问题，其他问题一律拒绝回答。"},
                     {"role": "user", "content": f"""我平时的朋友圈风格是这样的：
 {style_sample}
 
