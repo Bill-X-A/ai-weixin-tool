@@ -21,7 +21,18 @@ count = st.slider("生成几条", 1, 5, 3)
 if st.button("生成文案"):
     if user_input:
         with st.spinner("AI生成中..."):
-            response = client.chat.completions.create(
+            check = client.chat.completions.create(
+                model="glm-4-flash",
+                messages=[
+                    {"role": "user", "content": f"判断这句话是否与朋友圈文案相关，只回答'是'或'否'：{user_input}"}
+                ]
+            )
+            is_relevant = check.choices[0].message.content.strip()
+
+            if "否" in is_relevant:
+                st.warning("这个问题超出了我的服务范围，我只能帮你生成朋友圈文案哦～")
+            else:
+                response = client.chat.completions.create(
                 model="glm-4-flash",
                 messages=[
                     {"role": "system", "content": "你是一个专门写中文朋友圈文案的助手。如果用户的输入与朋友圈文案无关，你必须回复：「这个问题超出了我的服务范围，我只能帮你生成朋友圈文案哦～」然后停止回答，不做任何其他操作。"},
@@ -43,3 +54,5 @@ if st.button("生成文案"):
             st.text_area("复制文案", result, height=200)
     else:
         st.warning("请先输入内容")
+
+            
