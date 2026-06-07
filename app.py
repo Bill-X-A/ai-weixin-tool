@@ -30,7 +30,7 @@ if st.button("生成文案"):
             is_relevant = check.choices[0].message.content.strip()
 
             if "否" in is_relevant:
-                st.warning("这个问题超出了我的服务范围，我只能帮你生成朋友圈文案哦～")
+                st.warning("傻狗，赶紧撤回，这个问题超出了我的服务范围，我只能帮你生成朋友圈文案")
             else:
                 response = client.chat.completions.create(
                 model="glm-4-flash",
