@@ -1,3 +1,16 @@
+import os
+import json
+
+def load_prefs():
+    if os.path.exists("prefs.json"):
+        with open("prefs.json", "r") as f:
+            return json.load(f)
+    else:
+        return {"last_style": "活泼"}
+def save_prefs(style):
+    with open("prefs.json", "w") as f:
+        json.dump({"last_style": style}, f)
+    
 import streamlit as st
 from zhipuai import ZhipuAI
 
@@ -13,10 +26,11 @@ style_sample = st.text_area(
 )
 
 user_input = st.text_input("发生了什么？", placeholder="比如：今天去了西湖")
-
+load_prefs()
 styles =["活泼", "文艺", "简约", "搞笑", "感悟"]
 if "last_style" not in st.session_state:
-    st.session_state.last_style = "活泼"
+    prefs = load_prefs()
+    st.session_state.last_style = prefs["last_style"]
 style = st.selectbox("选择风格", styles, index = styles.index(st.session_state.last_style))
 
 count = st.slider("生成几条", 1, 5, 3)
@@ -56,5 +70,6 @@ if st.button("生成文案"):
                 st.write(result)
                 st.text_area("复制文案", result, height=200)
                 st.session_state.last_style = style
+                save_prefs(st.session_state.last_style)
     else:
         st.warning("请先输入内容")
