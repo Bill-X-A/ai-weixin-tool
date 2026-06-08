@@ -14,7 +14,10 @@ style_sample = st.text_area(
 
 user_input = st.text_input("发生了什么？", placeholder="比如：今天去了西湖")
 
-style = st.selectbox("选择风格", ["活泼", "文艺", "简约", "搞笑", "感悟"])
+styles =["活泼", "文艺", "简约", "搞笑", "感悟"]
+if "last_style" not in st.session_state:
+    st.session_state.last_style = "活泼"
+style = st.selectbox("选择风格", styles, index = styles.index(st.session_state.last_style))
 
 count = st.slider("生成几条", 1, 5, 3)
 
@@ -52,5 +55,6 @@ if st.button("生成文案"):
                 result = response.choices[0].message.content
                 st.write(result)
                 st.text_area("复制文案", result, height=200)
+                st.session_state.last_style = style
     else:
         st.warning("请先输入内容")
