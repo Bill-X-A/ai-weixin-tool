@@ -63,18 +63,13 @@ if st.button("调整文案"):
 
     if user_input:
         with st.spinner("AI生成中..."):
-            # 如果已经生成过文案了，就跳过AI Guard直接调整
-            if len(st.session_state.chat_history) > 1:
-                is_relevant = "是"  # 已有对话历史，直接放行
-            else:
-    # 第一次输入才做判断
-                check = client.chat.completions.create(
-                    model="glm-4-flash",
-                    messages=[
-                        {"role": "user", "content": f"用户正在使用朋友圈文案生成器。判断这句话是否与朋友圈文案相关（包括调整文案的要求），只回答'是'或'否'：{user_input}"}
-                    ]
-                )
-                is_relevant = check.choices[0].message.content.strip()
+            check = client.chat.completions.create(
+                model="glm-4-flash",
+                messages=[
+                    {"role": "user", "content": f"用户正在使用朋友圈文案生成器。判断这句话是否与朋友圈文案相关，只回答'是'或'否'：{user_input}"}
+                ]
+            )
+            is_relevant = check.choices[0].message.content.strip()
 
             if "否" in is_relevant:
                 st.warning("傻狗，赶紧撤回，这个问题超出了我的服务范围，我只能帮你生成朋友圈文案")
