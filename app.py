@@ -97,7 +97,7 @@ if st.session_state.show_adjust:
         if adjust_input:
             st.session_state.chat_history.append({
                 "role": "user",
-                "content": adjust_input
+                "content":  f"请严格按照以下要求修改上面的文案，不要忽略任何要求：{adjust_input}"
             })
             with st.spinner("调整中..."):
                 response = client.chat.completions.create(
