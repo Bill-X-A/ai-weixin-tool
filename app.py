@@ -44,7 +44,7 @@ if st.button("生成文案"):
             check = client.chat.completions.create(
                 model="glm-4-flash",
                 messages=[
-                    {"role": "user", "content": f"判断这句话是否与朋友圈文案相关（包括调整文案的要求），只回答'是'或'否'：{user_input}"}
+                    {"role": "user", "content": f"用户正在使用朋友圈文案生成器。判断这句话是否与朋友圈文案相关（包括调整文案的要求），只回答'是'或'否'：{user_input}"}
                 ]
             )
             is_relevant = check.choices[0].message.content.strip()
