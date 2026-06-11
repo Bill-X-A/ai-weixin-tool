@@ -91,23 +91,23 @@ if st.button("生成文案"):
 
 if st.session_state.show_adjust:
     st.divider()
-adjust_input = st.text_input("对文案有什么调整意见？", placeholder="比如：再活泼一点、写短一点")
+    adjust_input = st.text_input("对文案有什么调整意见？", placeholder="比如：再活泼一点、写短一点")
 
-if st.button("调整文案"):
-    if adjust_input:
-        st.session_state.chat_history.append({
-            "role": "user",
-            "content": adjust_input
-        })
-        with st.spinner("调整中..."):
-            response = client.chat.completions.create(
-                model="glm-4-flash",
-                messages=st.session_state.chat_history
-            )
-            result = response.choices[0].message.content
+    if st.button("调整文案"):
+        if adjust_input:
             st.session_state.chat_history.append({
-                "role": "assistant",
-                "content": result
+                "role": "user",
+                "content": adjust_input
             })
-            st.write(result)
-            st.text_area("复制文案", result, height=200)
+            with st.spinner("调整中..."):
+                response = client.chat.completions.create(
+                    model="glm-4-flash",
+                    messages=st.session_state.chat_history
+                )
+                result = response.choices[0].message.content
+                st.session_state.chat_history.append({
+                    "role": "assistant",
+                    "content": result
+                })
+                st.write(result)
+                st.text_area("复制文案", result, height=200)
