@@ -54,39 +54,39 @@ if st.button("生成文案"):
                 )
                 is_relevant = check.choices[0].message.content.strip()
 
-                if "否" in is_relevant:
-                    st.warning("傻狗，赶紧撤回，这个问题超出了我的服务范围，我只能帮你生成朋友圈文案")
-                else:
-                                    # 把用户输入加入历史
-                    st.session_state.chat_history.append({
-                        "role": "user", 
-                        "content": f"""我平时的朋友圈风格是这样的：
-                    {style_sample}
+            if "否" in is_relevant:
+                st.warning("傻狗，赶紧撤回，这个问题超出了我的服务范围，我只能帮你生成朋友圈文案")
+            else:
+                                # 把用户输入加入历史
+                st.session_state.chat_history.append({
+                    "role": "user", 
+                    "content": f"""我平时的朋友圈风格是这样的：
+                {style_sample}
 
-                    请模仿我的语气，根据以下事件生成{count}条{style}风格的朋友圈文案：
-                    {user_input}
+                请模仿我的语气，根据以下事件生成{count}条{style}风格的朋友圈文案：
+                {user_input}
 
-                    要求：
-                    - 模仿我的语气，不要有AI味
-                    - 口语化，自然，有细节感
-                    - 每条之间用空行隔开
-                    - 不要加编号"""
-                    })
+                要求：
+                - 模仿我的语气，不要有AI味
+                - 口语化，自然，有细节感
+                - 每条之间用空行隔开
+                - 不要加编号"""
+                })
 
-                    response = client.chat.completions.create(
-                        model="glm-4-flash",
-                        messages=st.session_state.chat_history
-                    )
+                response = client.chat.completions.create(
+                    model="glm-4-flash",
+                    messages=st.session_state.chat_history
+                )
 
-                    # 把AI回复也加入历史
-                    result = response.choices[0].message.content
-                    st.session_state.chat_history.append({
-                        "role": "assistant",
-                        "content": result
-                    })
+                # 把AI回复也加入历史
+                result = response.choices[0].message.content
+                st.session_state.chat_history.append({
+                    "role": "assistant",
+                    "content": result
+                })
 
-                    st.text_area("复制文案", result, height=200)
-                    st.session_state.last_style = style
-                    save_prefs(st.session_state.last_style)
+                st.text_area("复制文案", result, height=200)
+                st.session_state.last_style = style
+                save_prefs(st.session_state.last_style)
     else:
         st.warning("请先输入内容")
