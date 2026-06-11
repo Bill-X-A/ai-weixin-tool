@@ -41,47 +41,52 @@ count = st.slider("生成几条", 1, 5, 3)
 if st.button("生成文案"):
     if user_input:
         with st.spinner("AI生成中..."):
-            check = client.chat.completions.create(
-                model="glm-4-flash",
-                messages=[
-                    {"role": "user", "content": f"用户正在使用朋友圈文案生成器。判断这句话是否与朋友圈文案相关（调整文案的要求属于朋友圈文案），只回答'是'或'否'：{user_input}"}
-                ]
-            )
-            is_relevant = check.choices[0].message.content.strip()
-
-            if "否" in is_relevant:
-                st.warning("傻狗，赶紧撤回，这个问题超出了我的服务范围，我只能帮你生成朋友圈文案")
+            # 如果已经生成过文案了，就跳过AI Guard直接调整
+            if len(st.session_state.chat_history) > 1:
+                is_relevant = "是"  # 已有对话历史，直接放行
             else:
-                                # 把用户输入加入历史
-                st.session_state.chat_history.append({
-                    "role": "user", 
-                    "content": f"""我平时的朋友圈风格是这样的：
-                {style_sample}
-
-                请模仿我的语气，根据以下事件生成{count}条{style}风格的朋友圈文案：
-                {user_input}
-
-                要求：
-                - 模仿我的语气，不要有AI味
-                - 口语化，自然，有细节感
-                - 每条之间用空行隔开
-                - 不要加编号"""
-                })
-
-                response = client.chat.completions.create(
+    # 第一次输入才做判断
+                check = client.chat.completions.create(
                     model="glm-4-flash",
-                    messages=st.session_state.chat_history
+                    messages=[
+                        {"role": "user", "content": f"用户正在使用朋友圈文案生成器。判断这句话是否与朋友圈文案相关（包括调整文案的要求），只回答'是'或'否'：{user_input}"}
+                    ]
                 )
+                is_relevant = check.choices[0].message.content.strip()
 
-                # 把AI回复也加入历史
-                result = response.choices[0].message.content
-                st.session_state.chat_history.append({
-                    "role": "assistant",
-                    "content": result
-                })
+                if "否" in is_relevant:
+                    st.warning("傻狗，赶紧撤回，这个问题超出了我的服务范围，我只能帮你生成朋友圈文案")
+                else:
+                                    # 把用户输入加入历史
+                    st.session_state.chat_history.append({
+                        "role": "user", 
+                        "content": f"""我平时的朋友圈风格是这样的：
+                    {style_sample}
 
-                st.text_area("复制文案", result, height=200)
-                st.session_state.last_style = style
-                save_prefs(st.session_state.last_style)
+                    请模仿我的语气，根据以下事件生成{count}条{style}风格的朋友圈文案：
+                    {user_input}
+
+                    要求：
+                    - 模仿我的语气，不要有AI味
+                    - 口语化，自然，有细节感
+                    - 每条之间用空行隔开
+                    - 不要加编号"""
+                    })
+
+                    response = client.chat.completions.create(
+                        model="glm-4-flash",
+                        messages=st.session_state.chat_history
+                    )
+
+                    # 把AI回复也加入历史
+                    result = response.choices[0].message.content
+                    st.session_state.chat_history.append({
+                        "role": "assistant",
+                        "content": result
+                    })
+
+                    st.text_area("复制文案", result, height=200)
+                    st.session_state.last_style = style
+                    save_prefs(st.session_state.last_style)
     else:
         st.warning("请先输入内容")
