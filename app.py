@@ -3,6 +3,9 @@ import json
 import streamlit as st
 from zhipuai import ZhipuAI
 
+if "show_adjust" not in st.session_state:
+    st.session_state.show_adjust = False
+    
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = [
         {"role": "system", "content": "你是一个专门写中文朋友圈文案的助手。你的文案风格真实自然，不要有AI味。"}
@@ -82,8 +85,11 @@ if st.button("生成文案"):
                 st.text_area("复制文案", result, height=200)
                 st.session_state.last_style = style
                 save_prefs(st.session_state.last_style)
+                st.session_state.show_adjust = True
     else:
         st.warning("请先输入内容")
+
+if st.session_state.show_adjust:
 st.divider()
 adjust_input = st.text_input("对文案有什么调整意见？", placeholder="比如：再活泼一点、写短一点")
 
